@@ -1,0 +1,5 @@
+.idea/
+*.iml
+*.iws
+# Exclude the target directory and its contents
+target/
