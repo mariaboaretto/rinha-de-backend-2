@@ -1,16 +1,66 @@
-# Compiled class file
-*.class
-
-# Log file
+# Maven
+target/
+rinha-ap/target/
+!.mvn/wrapper/maven-wrapper.jar
+**/src/main/**/target/
+**/src/test/**/target/
+log/
 *.log
 
-# BlueJ files
+# Spring Boot
+spring-boot-starter-*/**/target/
+
+# IDE Specific
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+rinha-api/.apt_generated
+rinha-api/.classpath
+rinha-api/.factorypath
+rinha-api/.project
+rinha-api/.settings
+rinha-api/.springBeans
+rinha-api/.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+rinha-api/.idea/
+rinha-api/*.iws
+rinha-api/*.iml
+rinha-api/*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+**/src/main/**/build/
+**/src/test/**/build/
+rinha-api/nbproject/private/
+rinha-api/nbbuild/
+rinha-api/dist/
+rinha-api/nbdist/
+rinha-api/.nb-gradle/
+
+# Compiled Files
+*.class
+
+# BlueJ
 *.ctxt
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.nar
@@ -19,6 +69,12 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# System Files
+.DS_Store
+
+# Java Virtual Machine Crash Logs
 hs_err_pid*
 replay_pid*
+
+# SQL Scripts
+all-scripts.sql
