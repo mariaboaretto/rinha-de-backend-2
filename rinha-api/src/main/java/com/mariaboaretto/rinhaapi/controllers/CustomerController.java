@@ -3,7 +3,9 @@ package com.mariaboaretto.rinhaapi.controllers;
 import com.mariaboaretto.rinhaapi.domain.CustomerAccountInfoDTO;
 import com.mariaboaretto.rinhaapi.domain.ExtractDTO;
 import com.mariaboaretto.rinhaapi.domain.TransactionDTO;
+import com.mariaboaretto.rinhaapi.exceptions.InvalidTransactionTypeException;
 import com.mariaboaretto.rinhaapi.exceptions.LimitExceededException;
+import com.mariaboaretto.rinhaapi.exceptions.TransactionDescriptionLengthException;
 import com.mariaboaretto.rinhaapi.exceptions.UserNotFoundException;
 import com.mariaboaretto.rinhaapi.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +20,23 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    // TODO
     @PostMapping("/{id}/transacoes")
     public ResponseEntity<?> createTransaction(@RequestBody TransactionDTO transaction, @PathVariable Integer id) {
        CustomerAccountInfoDTO updatedAccInfo;
        try {
            updatedAccInfo = this.customerService.addTransaction(id, transaction);
        } catch (LimitExceededException e) {
+           // If transaction exceeds customer's limit, return 422
            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
        } catch (DataIntegrityViolationException e) {
+           // If customer does not exist, return 404
            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer Not Found");
+       } catch (InvalidTransactionTypeException e) {
+           // If transaction type is invalid, return 422
+           return  ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+       } catch (TransactionDescriptionLengthException e) {
+           // If transaction description length is invalid, return 422
+           return  ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
        }
 
         return ResponseEntity.ok().body(updatedAccInfo);
@@ -42,6 +51,8 @@ public class CustomerController {
             extract = this.customerService.getExtract(id);
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found!");
+        } catch (Exception e) {
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
         return ResponseEntity.ok().body(extract);

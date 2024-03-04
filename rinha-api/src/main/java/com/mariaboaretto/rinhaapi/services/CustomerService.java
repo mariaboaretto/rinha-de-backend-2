@@ -3,7 +3,9 @@ package com.mariaboaretto.rinhaapi.services;
 import com.mariaboaretto.rinhaapi.domain.CustomerAccountInfoDTO;
 import com.mariaboaretto.rinhaapi.domain.ExtractDTO;
 import com.mariaboaretto.rinhaapi.domain.TransactionDTO;
+import com.mariaboaretto.rinhaapi.exceptions.InvalidTransactionTypeException;
 import com.mariaboaretto.rinhaapi.exceptions.LimitExceededException;
+import com.mariaboaretto.rinhaapi.exceptions.TransactionDescriptionLengthException;
 import com.mariaboaretto.rinhaapi.exceptions.UserNotFoundException;
 import com.mariaboaretto.rinhaapi.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -30,6 +32,18 @@ public class CustomerService {
     @Transactional
     // Adds new transaction to DB and updates customer's balance accordingly
     public CustomerAccountInfoDTO addTransaction(Integer customerId, TransactionDTO transaction) {
+        // Validates if transaction type is valid
+        if (transaction.getTipo() != 'c' && transaction.getTipo() != 'd') {
+            throw new InvalidTransactionTypeException("Transaction must be of type 'c' or 'd'");
+        }
+
+        // Validates if transaction description complies with length limitation
+        if (transaction.getDescricao() == null ||
+                transaction.getDescricao().length() > 10 ||
+                transaction.getDescricao().isEmpty()) {
+            throw new TransactionDescriptionLengthException("Transaction description length must be between 1-10 characters.");
+        }
+
         // Attempts to update customer's balance
         try {
             var amount = (transaction.getTipo() == 'c') ? (transaction.getValor()) : (transaction.getValor() * -1);
