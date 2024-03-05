@@ -37,6 +37,9 @@ public class CustomerController {
        } catch (TransactionDescriptionLengthException e) {
            // If transaction description length is invalid, return 422
            return  ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+       } catch (Exception e) {
+           // Deals with any other exception
+           return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
        }
 
         return ResponseEntity.ok().body(updatedAccInfo);
@@ -52,6 +55,7 @@ public class CustomerController {
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found!");
         } catch (Exception e) {
+            // Handles any other exception
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 

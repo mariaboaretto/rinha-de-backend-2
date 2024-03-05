@@ -12,19 +12,16 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.sql.SQLException;
 
 @Service
 public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public ExtractDTO getExtract(Integer customerId) throws UserNotFoundException {
-        // Getting necessary data to generate extract
+    public ExtractDTO getExtract(Integer customerId) throws UserNotFoundException, SQLException {
+        // Getting data to generate extract
         var extractData = this.customerRepository.getExtractData(customerId);
-
-        // Validating if customer exists. If not, throw UserNotFound exception
-        if (extractData.isEmpty()) throw new UserNotFoundException("User Not Found");
 
         return new ExtractDTO(extractData);
     }
@@ -56,12 +53,7 @@ public class CustomerService {
         this.customerRepository.createTransaction(customerId, transaction.getDescricao(), transaction.getValor(),
                 transaction.getTipo());
 
-        // Returning account's update info TODO Review
+        // Returning account's update info
         return this.customerRepository.getAccountInfo(customerId);
-    }
-
-    // Updates customer balance
-    private void updateCustomerBalance(Integer id, Integer amount) {
-        this.customerRepository.updateCustomerBalance(id, amount);
     }
 }

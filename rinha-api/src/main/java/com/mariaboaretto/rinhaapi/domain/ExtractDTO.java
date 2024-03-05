@@ -21,7 +21,7 @@ public class ExtractDTO {
                 LocalDateTime.now(), extractData.get(0).getCustomer_limit());
 
         // Setting transaction list if customer has any transactions
-        if (!extractData.get(0).getTransaction_description().isEmpty()) {
+        if (extractData.get(0).getTransaction_description() != null) {
             // Populating transaction list
             for (CustomerTransactionDTO data : extractData) {
                 TransactionDTO transaction = new TransactionDTO(data.getTransaction_amount(), data.getTransaction_type(),
